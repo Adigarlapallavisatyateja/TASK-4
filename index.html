@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pallavi's Project - Task 4</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #fceabb, #f8b500);
+      color: #333;
+    }
+    header {
+      background: #4a148c;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    section {
+      background: white;
+      margin: 20px auto;
+      padding: 20px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 800px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    h2 {
+      color: #4a148c;
+    }
+    input, button, select {
+      padding: 10px;
+      margin: 5px 5px 15px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      background: #4a148c;
+      color: white;
+      cursor: pointer;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    li {
+      background: #fff3e0;
+      margin: 6px 0;
+      padding: 10px;
+      border-left: 6px solid #f57c00;
+      border-radius: 5px;
+    }
+    footer {
+      background: #4a148c;
+      color: white;
+      text-align: center;
+      padding: 12px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Adigarla Pallavi Satya Teja</h1>
+  <nav>
+    <a href="#portfolio">Portfolio</a>
+    <a href="#todo">To-Do</a>
+    <a href="#products">Products</a>
+  </nav>
+</header>
+
+<!-- Portfolio Section -->
+<section id="portfolio">
+  <h2>Portfolio Website</h2>
+  <h3>About Me</h3>
+  <p>I am a CSE student at GVP College, passionate about full-stack development and creative web design.</p>
+
+  <h3>Projects</h3>
+<ul>
+  <li><a href="https://github.com/Adigarlapallavisatyateja/TASK-3.git" target="_blank">🎨 Colorful Quiz Game</a></li>
+  <li><a href="https://github.com/Adigarlapallavisatyateja/APEXPLANET-TASK-2.git" target="_blank">🎯 Number Guessing Game in Python</a></li>
+  <li><a href="https://github.com/Adigarlapallavisatyateja/APEX-PLANET.git" target="_blank">📝 Apex planet</a></li>
+</ul>
+  <h3>Contact</h3>
+  <p>Email: pallaviadigarla@gmail.com</p>
+</section>
+
+<!-- To-Do List Section -->
+<section id="todo">
+  <h2>To-Do List App</h2>
+  <input type="text" id="taskInput" placeholder="Enter task here..." />
+  <button onclick="addTask()">Add Task</button>
+  <ul id="taskList"></ul>
+</section>
+
+<!-- Product Listing Section -->
+<section id="products">
+  <h2>Product Listing</h2>
+  <label>Category:</label>
+  <select id="filter" onchange="filterProducts()">
+    <option value="all">All</option>
+    <option value="electronics">Electronics</option>
+    <option value="books">Books</option>
+  </select>
+
+  <label>Sort:</label>
+  <select id="sort" onchange="sortProducts()">
+    <option value="default">Default</option>
+    <option value="price">Price</option>
+    <option value="rating">Rating</option>
+  </select>
+
+  <ul id="productList"></ul>
+</section>
+
+<footer>
+  &copy; 2025 Created by Pallavi | ApexPlanet Internship Task 4
+</footer>
+
+<script>
+  // ✅ Task 2: To-Do List with Retrieval
+  const taskListEl = document.getElementById("taskList");
+
+  function addTask() {
+  const input = document.getElementById("taskInput");
+  const task = input.value.trim();
+  if (!task) return;
+
+  const li = document.createElement("li");
+  li.textContent = task;
+
+  // ✅ Make item removable when clicked
+  li.addEventListener("click", function () {
+    this.remove();
+    saveTasks();
+  });
+
+  document.getElementById("taskList").appendChild(li);
+  input.value = "";
+  saveTasks();
+}
+
+  function saveTasks() {
+    const tasks = [];
+    document.querySelectorAll("#taskList li").forEach(item => {
+      tasks.push(item.textContent);
+    });
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }
+
+  function loadTasks() {
+  const stored = JSON.parse(localStorage.getItem("tasks") || "[]");
+  stored.forEach(task => {
+    const li = document.createElement("li");
+    li.textContent = task;
+
+    // ✅ Also add remove event to loaded items
+    li.addEventListener("click", function () {
+      this.remove();
+      saveTasks();
+    });
+
+    document.getElementById("taskList").appendChild(li);
+  });
+}
+
+  // ✅ Task 3: Product Listing with Filtering and Sorting
+  const products = [
+    { name: "Mobile", category: "electronics", price: 12000, rating: 4.5 },
+    { name: "Laptop", category: "electronics", price: 45000, rating: 4.8 },
+    { name: "Java Book", category: "books", price: 500, rating: 4.2 },
+    { name: "Headphones", category: "electronics", price: 3000, rating: 4.0 }
+  ];
+
+  function displayProducts(list) {
+    const ul = document.getElementById("productList");
+    ul.innerHTML = "";
+    list.forEach(p => {
+      const li = document.createElement("li");
+      li.textContent = `${p.name} - ₹${p.price} - ⭐ ${p.rating}`;
+      ul.appendChild(li);
+    });
+  }
+
+  function filterProducts() {
+    const category = document.getElementById("filter").value;
+    let filtered = category === "all" ? products : products.filter(p => p.category === category);
+    displayProducts(filtered);
+  }
+
+  function sortProducts() {
+    const sortBy = document.getElementById("sort").value;
+    let sorted = [...products];
+    if (sortBy === "price") sorted.sort((a, b) => a.price - b.price);
+    if (sortBy === "rating") sorted.sort((a, b) => b.rating - a.rating);
+    displayProducts(sorted);
+  }
+
+  // On Page Load
+  loadTasks();
+  displayProducts(products);
+</script>
+</body>
+</html>
